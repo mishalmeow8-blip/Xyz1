@@ -1,0 +1,8 @@
+{
+  "name": "VPN Client Dashboard",
+  "description": "An interactive, high-fidelity VPN client dashboard and simulation tool featuring worldwide servers, live network metrics, secure tunnel simulation, and latency diagnostic tools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
