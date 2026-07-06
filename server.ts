@@ -1,5 +1,7 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
+import AdmZip from "adm-zip";
 import { createServer as createViteServer } from "vite";
 
 async function startServer() {
@@ -9,6 +11,31 @@ async function startServer() {
   // JSON and URL-encoded parsers
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // API endpoint: Compress and download the complete Kotlin Android Project
+  app.get("/api/android/download", (req, res) => {
+    try {
+      const androidDir = path.join(process.cwd(), "android");
+      
+      if (!fs.existsSync(androidDir)) {
+        return res.status(404).send("Android project directory not found.");
+      }
+
+      const zip = new AdmZip();
+      // Add the entire android folder recursively to the root of the ZIP
+      zip.addLocalFolder(androidDir);
+
+      const buffer = zip.toBuffer();
+
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader("Content-Disposition", "attachment; filename=AetherVPN-Android-Project.zip");
+      res.setHeader("Content-Length", buffer.length);
+      res.send(buffer);
+    } catch (error: any) {
+      console.error("ZIP creation failed:", error);
+      res.status(500).send(`Failed to generate ZIP project: ${error.message}`);
+    }
+  });
 
   // API endpoint: Get server's actual public IP (from Google Cloud / Cloud Run exit node)
   app.get("/api/vpn/server-ip", async (req, res) => {

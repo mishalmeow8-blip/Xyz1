@@ -7,6 +7,7 @@ import { ServerList } from './components/ServerList';
 import { NetworkStats } from './components/NetworkStats';
 import { Diagnostics } from './components/Diagnostics';
 import { SettingsPanel } from './components/SettingsPanel';
+import { AndroidProjectViewer } from './components/AndroidProjectViewer';
 import {
   Power,
   Shield,
@@ -22,7 +23,12 @@ import {
   ArrowRight,
   ExternalLink,
   Laptop,
+  Smartphone,
+  Download,
+  Code,
+  FileCode,
 } from 'lucide-react';
+import { ANDROID_PROJECT_FILES } from './data/androidProjectFiles';
 
 export default function App() {
   // VPN states
@@ -38,7 +44,7 @@ export default function App() {
   const [realClientIp, setRealClientIp] = useState<string>('Detecting...');
   const [serverIp, setServerIp] = useState<string>('Detecting...');
   const [serverIsp, setServerIsp] = useState<string>('Google Cloud Platform');
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'browser'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'browser' | 'android'>('dashboard');
   const [inputUrl, setInputUrl] = useState<string>('https://httpbin.org/ip');
   const [activeProxyUrl, setActiveProxyUrl] = useState<string>('https://httpbin.org/ip');
 
@@ -221,6 +227,17 @@ export default function App() {
             >
               <Globe className="h-3.5 w-3.5" />
               Secure Browser Sandbox
+            </button>
+            <button
+              onClick={() => setActiveTab('android')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'android'
+                  ? 'bg-blue-600 text-white shadow'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Smartphone className="h-3.5 w-3.5" />
+              Android App Project
             </button>
           </div>
 
@@ -457,7 +474,7 @@ export default function App() {
           </div>
         </div>
           </>
-        ) : (
+        ) : activeTab === 'browser' ? (
           <div className="space-y-6">
             {/* VPN Status Banner for Browser */}
             <div className={`p-4 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-4 transition-all ${
@@ -615,6 +632,8 @@ export default function App() {
               </div>
             </div>
           </div>
+        ) : (
+          <AndroidProjectViewer />
         )}
       </main>
 
